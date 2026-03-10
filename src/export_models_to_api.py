@@ -92,6 +92,10 @@ def export_models():
             indicator = row['indicator']
             winner_model = row['Winner']
             
+            # Specific override for employment_total in greek_tourism as requested by user
+            if domain == 'greek_tourism' and indicator == 'employment_total':
+                winner_model = 'linear'
+            
             # Determine Feature Set
             feature_set = "Multi" # Default
             if not det_df.empty:
@@ -124,7 +128,7 @@ def export_models():
                 
             if winner_model == 'xgboost':
                 model = ModelClass(n_estimators=200, max_depth=4, learning_rate=0.1, objective='reg:absoluteerror')
-            elif winner_model == 'linear':
+            elif winner_model == 'linear' or ModelClass == Ridge:
                 model = ModelClass(alpha=1.0)
             else:
                 model = ModelClass(target_prefix=indicator)
